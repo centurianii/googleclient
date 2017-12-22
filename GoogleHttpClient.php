@@ -4,6 +4,8 @@ require_once dirname(__FILE__) . '/GoogleToken.php';
 
 namespace auth;
 
+use g3\Utils;
+
 /**
  * The GoogleHttpClient is a helper class that is called from other commands.
  * 
