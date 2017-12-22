@@ -15,7 +15,7 @@ class Utils {
     */
    public function __construct() {}
    
-      /**
+   /**
     * It splits a GET request to a hashed array of keys-values and returns the
     * array or false if, it fails to make the split.
     * 
@@ -34,7 +34,7 @@ class Utils {
     * -'key=value1&   =value2' returns array('key' => 'value1'),
     * -'key1=value1&key2=value2' returns array('key1' => 'value1', 'key2' => 'value2'),
     * -'key1=value1& key2  =    value2  ' returns array('key1' => 'value1', 'key2' => 'value2'),
-    * -'key1=value1& key2  =      ' returns array('key1' => 'value1', 'key2' => 'value2'),
+    * -'key1=value1& key2  =      ' returns array('key1' => 'value1', 'key2' => ''),
     * -'key1=value1& key2  =' returns array('key1' => 'value1', 'key2' => ''),
     * -'key1=value1   & key2  ' returns array('key1' => 'value1', 'key2' => null),
     * -'any value' with $delim1 = '' returns false.
