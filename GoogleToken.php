@@ -95,32 +95,32 @@ class GoogleToken {
        */
       //$this->set('incremental_scopes', false);
    }
-   
-   /**
+ 
+    /**
     * Returns a value at the given key(s) (1- or 2-level arrays).
     * 
-    * preconditions: key(s) should be a non-empty string.
+    * preconditions: key(s) should be a non-empty string or integer type.
     * postconditions: it returns a value (if exists) or null. 
-    *    Passing non-strings or empty strings, it returns the whole 
-    *    GoogleToken::$values array in case of such argument in 1st position or, 
-    *    GoogleToken::$values[$key1] in case of such argument in 2nd position.
+    *    Passing non-string or non-integer types or empty strings, it returns 
+    *    GoogleToken::values array in case of such argument in 1st position or, 
+    *    GoogleToken::values[$key1] or null in case of such argument in 2nd position.
     * 
-    * @param string $key1 A string used as key in GoogleToken::$values array
-    * @param string|null $key2 A string used as key in the array of another key 
-    *    in GoogleToken::$values[$key1] array
+    * @param integer|string|null $key1 Used as key in GoogleToken::values array
+    * @param integer|string|null $key2 Used as key in the array of another key 
+    *    in GoogleToken::values[$key1] array
     * 
     * @return null|mixed|mixed[] Returns the value for the key(s) or null if it 
     *    fails to find a value.
     */
    public function get($key1 = null, $key2 = null) {
-      if (\is_string($key1) && ($key1 !== '')) {
+      if (\is_integer($key1) || (\is_string($key1) && ($key1 !== ''))) {
          if (\is_null($key2)) {
             if(\in_array($key1, \array_keys($this->values), true))
                return $this->values[$key1];
             else
                return null;
          } elseif (\is_array($this->values[$key1])) {
-            if (\is_string($key2) && ($key2 !== '')) {
+            if (\is_integer($key2) || (\is_string($key2) && ($key2 !== ''))) {
                if (\in_array($key2, \array_keys($this->values[$key1]), true))
                   return $this->values[$key1][$key2];
                else
@@ -136,26 +136,26 @@ class GoogleToken {
    /**
     * Sets a value at the given key(s).
     * 
-    * preconditions: key(s) should be a non-empty string.
-    *    In case of 3 arguments, the above rule should apply to the first 2. 
+    * preconditions: key(s) should be a non-empty string or integer type.
+    *    In case of 2 arguments, the above rule should apply to the first one.
+    *    In case of 3 arguments, the above rule should apply to the first two.
     *    All values are acceptable as third argument except the character "\0" 
     *    which serves as a control (default) character and signifies the 
     *    existence of only 2 arguments.
-    * postconditions: in case of 2 arguments, if first argument is a non-empty 
-    *    string, it returns true and it uses the first argument as a key and the 
-    *    second as the value in GoogleToken::$values array, i.e. values[$key1] = 
-    *    $key2. The same applies in case of 3 arguments where $val !== "\0", 
-    *    i.e. values[$key1][$key2] = $val. In all other cases, it returns false.
+    * postconditions: if key(s) is/are acceptable, it returns true and sets the 
+    *    GoogleToken::values array, i.e. values[$key1] = $key2 or, in case of 3 
+    *    arguments where $val !== "\0" values[$key1][$key2] = $val. In all other 
+    *    cases, it returns false.
     * 
-    * @param string $key1 A string used as key in GoogleToken::$values array
+    * @param integer|string|null $key1 Used as key in GoogleToken::values array
     * @param mixed $key2 In case of 2 arguments, it's the a value stored.
     *    In case of 3 arguments, it's the 2nd key
-    * @param mixed $value A value of a 2-dimensional array
+    * @param mixed $value A value for a 2-dimensional array
     * 
     * @return boolean True on success
     */
    public function set($key1 = null, $key2 = null, $val = "\0") {
-      if(\is_string($key1) && ($key1 !== '')){
+      if(\is_integer($key1) || (\is_string($key1) && ($key1 !== ''))){
          if ($val === "\0") {
             $this->values[$key1] = $key2;
             return true;
