@@ -1,8 +1,8 @@
 <?php
 require_once dirname(__FILE__) . '/GoogleHttpClient.php';
 
-use g3\GoogleToken;
-use g3\GoogleHttpClient;
+use auth\GoogleToken;
+use auth\GoogleHttpClient;
 
 $token = new GoogleToken();
 $token->set('log', true);
