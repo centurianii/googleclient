@@ -16,28 +16,12 @@ class GoogleToken {
       $this->set('log', false);
       
       /** 
-       * --------------------
-       * Servicing parameters
-       * --------------------
-       * Uris that build interfaces with the user interaction.
-       */
-      $this->set('redirect_uri', 'http://localhost/auth/google/login');
-      
-      /** 
-       * ---------------------
-       * Google endpoints file
-       * ---------------------
-       * stored localy, see https://developers.google.com/identity/protocols/OpenIDConnect
-       * We dropped support due to Google's noances!
-       */
-      $this->set('google_endpoints', 'google_endpoints.json');
-      
-      /** 
        * ------------------
        * Console parameters
        * ------------------
        * see https://console.developers.google.com/apis/credentials.
        */
+      $this->set('redirect_uri', 'http://localhost/auth/google/login');
       $this->set('client_id', '');
       $this->set('client_secret', '');
       
