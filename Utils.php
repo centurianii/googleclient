@@ -18,6 +18,10 @@ class Utils {
    /**
     * It splits a GET request to a hashed array of keys-values and returns the
     * array or false if, it fails to make the split.
+    * Resembles php's 'parse_str()' but: 
+    * -it returns null when a key does not have '='
+    * -it trims spaces in values and
+    * -it does not convert arguments with suffix '[]' to arrays.
     * 
     * preconditions: none.
     * 
