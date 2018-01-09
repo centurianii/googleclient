@@ -4,16 +4,30 @@ namespace auth;
 /**
  * Google authentication Config class
  */
-class GoogleToken {
-   /** @var string $values A hased array of values */
-   protected $values;
-   
+class GoogleToken extends BaseToken {
    /** 
     * Constructor.
+    * 
+    * @param string $path  An optional string representing a relative path (not 
+    *    advised) or absolute
     */
-   public function __construct() {
+   public function __construct($path = null) {
+      parent::__construct($path);
+      $this->file = Registry::getInstance()->getFile(__CLASS__);
+      
+      // use the GoogleHttpClient instead of the API
+      $this->set('curl', true);
       // log Google responses
       $this->set('log', false);
+      
+      /** 
+       * ---------------------
+       * Google endpoints file
+       * ---------------------
+       * stored localy, see https://developers.google.com/identity/protocols/OpenIDConnect
+       * We dropped support due to Google's noances!
+       */
+      $this->set('google_endpoints', 'google_endpoints.json');
       
       /** 
        * ------------------
@@ -24,6 +38,14 @@ class GoogleToken {
       $this->set('redirect_uri', 'http://localhost/auth/google/login');
       $this->set('client_id', '');
       $this->set('client_secret', '');
+      
+      /**
+       * ------------
+       * Google Hosts
+       * ------------
+       */
+      $this->set('accounts.google.com', "accounts.google.com:443:216.58.198.13");
+      $this->set('www.googleapis.com', "www.googleapis.com:443:216.58.205.74");
       
       /** 
        * ---------------------
@@ -55,7 +77,6 @@ class GoogleToken {
       $this->set('authorization_fields_ndx', 2);
       /** used by other classes, @see AuthCommand */
       $this->set('id', 'code');
-      $this->set('xss', 'state');
       /**
        * -------------
        * Authorization
@@ -63,6 +84,7 @@ class GoogleToken {
        */
       $this->set('token_endpoint', 'https://accounts.google.com/o/oauth2/token');
       $this->set('token_fields', 'client_id=&client_secret=&redirect_uri=&code=&grant_type=authorization_code');
+      $this->set('code', '');
       /**
        * ---------
        * User Info
@@ -94,77 +116,5 @@ class GoogleToken {
        *  https://developers.google.com/identity/protocols/OAuth2WebServer#incrementalAuth
        */
       //$this->set('incremental_scopes', false);
-   }
- 
-    /**
-    * Returns a value at the given key(s) (1- or 2-level arrays).
-    * 
-    * preconditions: key(s) should be a non-empty string or integer type.
-    * postconditions: it returns a value (if exists) or null. 
-    *    Passing non-string or non-integer types or empty strings, it returns 
-    *    GoogleToken::values array in case of such argument in 1st position or, 
-    *    GoogleToken::values[$key1] or null in case of such argument in 2nd position.
-    * 
-    * @param integer|string|null $key1 Used as key in GoogleToken::values array
-    * @param integer|string|null $key2 Used as key in the array of another key 
-    *    in GoogleToken::values[$key1] array
-    * 
-    * @return null|mixed|mixed[] Returns the value for the key(s) or null if it 
-    *    fails to find a value.
-    */
-   public function get($key1 = null, $key2 = null) {
-      if (\is_integer($key1) || (\is_string($key1) && ($key1 !== ''))) {
-         if (\is_null($key2)) {
-            if(\in_array($key1, \array_keys($this->values), true))
-               return $this->values[$key1];
-            else
-               return null;
-         } elseif (\is_array($this->values[$key1])) {
-            if (\is_integer($key2) || (\is_string($key2) && ($key2 !== ''))) {
-               if (\in_array($key2, \array_keys($this->values[$key1]), true))
-                  return $this->values[$key1][$key2];
-               else
-                  return null;
-            } else
-               return $this->values[$key1];
-         } else
-            return null;
-      } else
-         return $this->values;
-   }
-   
-   /**
-    * Sets a value at the given key(s).
-    * 
-    * preconditions: key(s) should be a non-empty string or integer type.
-    *    In case of 2 arguments, the above rule should apply to the first one.
-    *    In case of 3 arguments, the above rule should apply to the first two.
-    *    All values are acceptable as third argument except the character "\0" 
-    *    which serves as a control (default) character and signifies the 
-    *    existence of only 2 arguments.
-    * postconditions: if key(s) is/are acceptable, it returns true and sets the 
-    *    GoogleToken::values array, i.e. values[$key1] = $key2 or, in case of 3 
-    *    arguments where $val !== "\0" values[$key1][$key2] = $val. In all other 
-    *    cases, it returns false.
-    * 
-    * @param integer|string|null $key1 Used as key in GoogleToken::values array
-    * @param mixed $key2 In case of 2 arguments, it's the a value stored.
-    *    In case of 3 arguments, it's the 2nd key
-    * @param mixed $value A value for a 2-dimensional array
-    * 
-    * @return boolean True on success
-    */
-   public function set($key1 = null, $key2 = null, $val = "\0") {
-      if(\is_integer($key1) || (\is_string($key1) && ($key1 !== ''))){
-         if ($val === "\0") {
-            $this->values[$key1] = $key2;
-            return true;
-         } elseif (\is_integer($key2) || (\is_string($key2) && ($key2 !== ''))) {
-            $this->values[$key1][$key2] = $val;
-            return true;
-         } else
-            return false;
-      } else
-         return false;
    }
 }
