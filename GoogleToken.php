@@ -40,6 +40,14 @@ class GoogleToken extends BaseToken {
       $this->set('client_secret', '');
       
       /**
+       * -------------
+       * Support files
+       * -------------
+       */
+      $this->set('cert_path', dirname(__FILE__) . '/cacert.pem');
+      $this->set('curl_log', dirname(__FILE__) . '/curl.log');
+      
+      /**
        * ------------
        * Google Hosts
        * ------------
